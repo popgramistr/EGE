@@ -1,7 +1,6 @@
 from itertools import product
 
-s = product('1234', repeat=2)
-for line in s:
+for line in product('1234', repeat=2):
     print(''.join(line))
 
 print()

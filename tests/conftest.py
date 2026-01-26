@@ -176,12 +176,11 @@ def add_result(date_time, task_number, task_type, result):
         create_new_db()
     with sqlite3.connect(db_path()) as connection:
         cursor = connection.cursor()
-        # Проверяем, есть ли уже запись с таким task_number и task_type
-        existing = get_result(task_number, task_type)
-        
-        # Если запись существует и последний результат был правильным (1), не добавляем новую запись
-        if existing and existing[3] == 1:
-            return  # Не добавляем дубликат правильного ответа
+        # Проверяем, был ли хоть раз правильный результат
+        cursor.execute('SELECT 1 FROM test WHERE task_number = ? AND task_type = ? AND result = 1',
+                       (task_number, task_type))
+        if cursor.fetchone():
+            return  # Если был хоть раз правильный результат, то не добавляем
         
         # В остальных случаях добавляем новую запись
         cursor.execute('INSERT INTO test (date_time, task_number, task_type, result) VALUES (?, ?, ?, ?)',
@@ -526,7 +525,7 @@ def result_register(task_type, number, result, right_result):
             return []
 
         # Список поддерживаемых расширений файлов
-        extensions = ['.md', '.png', '.py', '.jpg', '.ods', '.xlsx', '.odt', '.docx', '.doc', '.xls', '.csv', '.txt']
+        extensions = ['.md', '.png', '.py', '.jpg', '.ods', '.xlsx', '.odt', '.docx', '.doc', '.xls', '.csv', '.txt', '.pdf']
         # Список найденных файлов
         files_to_rename = []
         renamed_paths = []

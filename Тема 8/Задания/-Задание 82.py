@@ -3,7 +3,7 @@
 from itertools import product
 
 n = 0
-for p in product('АКОРСТ', repeat = 6):
+for p in product('АКОРСТ', repeat = 5):
     n += 1
     line = ''.join(p)
     l = line[0]

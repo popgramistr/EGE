@@ -1,6 +1,11 @@
 # Решение
 
-
+for N in range(1, 101):
+    Nb = bin(N)[2:]
+    M = bin(N % 4)[2:]
+    R = Nb + M
+    R = int(R, 2)
+    print(R)
 
 
 

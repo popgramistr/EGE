@@ -9,6 +9,7 @@ for p in product('АКОРСТ', repeat = 6):
     l = line[0]
     if (l == 'Р' or l == 'О' or l == 'К') and line.count('О') == 2 and n % 2 == 0:
         ans = line
+        print(ans, n)
 
 print(ans)
 

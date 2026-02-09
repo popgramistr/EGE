@@ -13,7 +13,7 @@ for p in product('АКОРСТ', repeat = 5):
 
 print(ans)
 
-answer = 'РТТООТ'
+answer = 'РТООТ'
 
 #
 

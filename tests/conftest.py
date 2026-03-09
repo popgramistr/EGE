@@ -476,10 +476,9 @@ def show_common_progress():
             if not vals:
                 continue
             if sum(vals) > 0:
-                per_task_scores.append(1.0)
+                per_task_scores.append(sum(vals) / len(vals))
             else:
-                incorrect_count = len(vals)
-                per_task_scores.append(1.0 / (2 ** incorrect_count))
+                per_task_scores.append(0.0)
 
         percent = (sum(per_task_scores) / len(per_task_scores)) * 100 if per_task_scores else 0.0
 
@@ -603,3 +602,11 @@ def result_register(task_type, number, result, right_result):
         git_commit(f"Обновлены графики прогресса")
     
     return "Верно" if res else "Неверно"
+fig = show_common_progress()
+fig_path = f'{repo_root()}/tests/common_progress.png'
+fig.savefig(fig_path)
+
+# Создаем и сохраняем детальную таблицу прогресса
+detail_fig = show_detailed_progress_table()
+detail_fig_path = f'{repo_root()}/tests/detailed_progress.png'
+detail_fig.savefig(detail_fig_path)

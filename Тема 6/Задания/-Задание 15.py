@@ -20,7 +20,7 @@ for x in range(-koef, koef):
 
 exitonclick()
 
-answer = 39
+answer = 61
 
 #
 

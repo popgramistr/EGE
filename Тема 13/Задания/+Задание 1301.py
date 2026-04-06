@@ -1,11 +1,11 @@
 # Решение
 from ipaddress import ip_network
 
-count = 0
 for mask in range(32, -1, -1):
     net1 = ip_network(f'157.220.185.237/{mask}', False)
     net2 = ip_network(f'157.220.184.230/{mask}', False)
     if net1 == net2:
+        count = 0
         for ip in net1:
             if f'{ip:b}'.count('1') == 15:
                 count += 1

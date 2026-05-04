@@ -1,4 +1,4 @@
-for x in '0123456789ABCDE':
+for x in '0123456789ABCDEFGHIJKL':
     p1 = f'98{x}79641'
     p2 = f'25{x}49'
     p3 = f'63{x}5'

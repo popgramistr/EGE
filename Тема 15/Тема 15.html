@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 15. Основы логики</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/prism.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1><span class="emoji">🧠</span>Тема 15. Основы логики</h1>
+        <p>Логические выражения, тождественная истинность, поиск параметров</p>
+    </header>
+
+    <nav class="nav">
+        <ul>
+            <li><a href="#intro">📝 Введение</a></li>
+            <li><a href="#ex1">🔹 Тип 1: Поразрядная конъюнкция</a></li>
+            <li><a href="#ex2">🔹 Тип 2: Отрезки на числовой прямой</a></li>
+            <li><a href="#ex3">🔹 Тип 3: Координатная плоскость</a></li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <section id="intro" class="section">
+            <h2><span class="emoji">📝</span>Введение</h2>
+            <p>
+                Задания 15 типа ЕГЭ по информатике проверяют знание основ логики и умение работать с логическими
+                выражениями. Главная задача — найти параметры, при которых логическое выражение является
+                тождественно истинным (истинно при любых допустимых значениях переменных).
+            </p>
+            <p>
+                Основные типы задач:
+            <ul>
+                <li><strong>Поразрядные операции:</strong> Работа с битовыми операциями (&).</li>
+                <li><strong>Отрезки на прямой:</strong> Логические выражения с принадлежностью отрезкам.</li>
+                <li><strong>Многомерные области:</strong> Системы неравенств с несколькими переменными.</li>
+            </ul>
+            В решениях используется перебор значений с проверкой всех возможных случаев.
+            </p>
+        </section>
+
+        <section id="ex1" class="section">
+            <h2><span class="emoji">🔹</span>Тип 1: Поразрядная конъюнкция</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Обозначим через m & n поразрядную конъюнкцию неотрицательных целых чисел m и n.<br>
+                    Например, 14 & 5 = 1110₂ & 0101₂ = 0100₂ = 4.<br>
+                    Для какого наименьшего неотрицательного целого числа А формула:<br><br>
+                    <strong>x&77 ≠ 0 → (x&12 = 0 → x&А ≠ 0)</strong><br><br>
+                    тождественно истинна?
+                </p>
+                <div class="success">
+                    <strong>💡 Подсказка:</strong> Импликация A → B ложна только когда A истинно, а B ложно.
+                    В остальных случаях она истинна.
+                </div>
+                <h4>Решение:</h4>
+                
+                <h5 style="color: #495057; margin-top: 25px;">💡 Способ 1: С использованием break/else</h5>
+                <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link><code class="language-python">for a in range(128):
+    for x in range(128):
+        if not((x & 77 != 0) <= ((x & 12 == 0) <= (x & a != 0))):
+            break
+    else:
+        print(a)  # Результат: 65
+        break</code></pre>
+                </div>
+                
+                <h5 style="color: #495057; margin-top: 25px;">💡 Способ 2: С флагом</h5>
+                <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link"><code class="language-python">for a in range(128):
+    f = True
+    for x in range(128):
+        if not((x & 77 != 0) <= ((x & 12 == 0) <= (x & a != 0))):
+            f = False
+            break
+    if f:
+        print(a)  # Результат: 65
+        break</code></pre>
+                </div>
+                
+                <h5 style="color: #495057; margin-top: 25px;">💡 Способ 3: С использованием all()</h5>
+                <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link"><code class="language-python">for a in range(128):
+    if all(((x & 77 != 0) <= ((x & 12 == 0) <= (x & a != 0))) for x in range(128)):
+        print(a)  # Результат: 65
+        break</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="ex2" class="section">
+            <h2><span class="emoji">🔹</span>Тип 2: Отрезки на числовой прямой</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    На числовой прямой даны два отрезка: Р = [12, 62] и Q = [52, 92].<br>
+                    Какова наименьшая возможная длина интервала A, что логическое выражение<br><br>
+                    <strong>¬(¬(х ∈ А) ∧ (х ∈ Р)) ∨ (х ∈ Q)</strong><br><br>
+                    тождественно истинно?
+                </p>
+                <div class="warning">
+                    <strong>⚠️ Важно:</strong> Необходимо перебрать все возможные интервалы A и найти минимальную длину.
+                </div>
+                
+                <h4>Алгебраическое упрощение:</h4>
+                <div style="margin-top: 20px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                    <h5 style="margin-top: 0; color: #856404;">📚 Пошаговое упрощение выражения:</h5>
+                    <div style="font-family: 'Courier New', monospace; line-height: 1.8;">
+                        <p><strong>Исходное выражение:</strong><br>
+                        <span style="background: #f8f9fa; padding: 4px 8px; border-radius: 3px;">¬(¬(х ∈ А) ∧ (х ∈ Р)) ∨ (х ∈ Q)</span></p>
+                        
+                        <p><strong>Шаг 1:</strong> Применяем закон Де Моргана: ¬(A ∧ B) ≡ ¬A ∨ ¬B<br>
+                        <span style="background: #e7f3ff; padding: 4px 8px; border-radius: 3px;">¬¬(х ∈ А) ∨ ¬(х ∈ Р) ∨ (х ∈ Q)</span></p>
+                        
+                        <p><strong>Шаг 2:</strong> Закон двойного отрицания: ¬¬A ≡ A<br>
+                        <span style="background: #e8f5e8; padding: 4px 8px; border-radius: 3px;">(х ∈ А) ∨ ¬(х ∈ Р) ∨ (х ∈ Q)</span></p>
+                        
+                        <p><strong>Итоговая форма:</strong><br>
+                        <span style="background: #f0f8f0; padding: 6px 12px; border-radius: 4px; font-weight: bold;">х ∈ (А ∪ ¬P ∪ Q)</span></p>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 4px;">
+                        <strong>💡 Логический анализ:</strong>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Для тождественной истинности: <strong>А ∪ P̄ ∪ Q = ℝ</strong> (вся числовая прямая)</li>
+                            <li>P̄ ∪ Q = (-∞, 12) ∪ (62, +∞) ∪ [52, 92] = (-∞, 12) ∪ [52, +∞)</li>
+                            <li>Недостающий участок: <strong>[12, 52)</strong> - должен быть покрыт множеством A</li>
+                            <li>Минимальная длина A = 52 - 12 = <strong>40</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h4>Графическое решение:</h4>
+                <div style="margin: 20px 0; padding: 25px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <!-- Числовая прямая -->
+                    <div style="position: relative; height: 200px; margin: 25px 10px; background: white; padding: 30px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <!-- Основная линия с градиентом -->
+                        <div style="position: absolute; top: 100px; left: 60px; right: 60px; height: 4px; background: linear-gradient(to right, #6c757d, #495057); border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);"></div>
+                        
+                        <!-- Стрелка в конце линии -->
+                        <div style="position: absolute; top: 97px; right: 55px; width: 0; height: 0; border-left: 8px solid #495057; border-top: 5px solid transparent; border-bottom: 5px solid transparent;"></div>
+                        
+                        <!-- Отметки на прямой с улучшенным дизайном -->
+                        <div style="position: absolute; top: 88px; left: 80px; width: 3px; height: 24px; background: #343a40; border-radius: 1px;"></div>
+                        <div style="position: absolute; top: 120px; left: 75px; font-size: 13px; font-weight: 600; color: #343a40;">0</div>
+                        
+                        <div style="position: absolute; top: 88px; left: 200px; width: 3px; height: 24px; background: #007bff; border-radius: 1px;"></div>
+                        <div style="position: absolute; top: 120px; left: 192px; font-size: 13px; font-weight: 600; color: #007bff;">12</div>
+                        
+                        <div style="position: absolute; top: 88px; left: 400px; width: 3px; height: 24px; background: #28a745; border-radius: 1px;"></div>
+                        <div style="position: absolute; top: 120px; left: 392px; font-size: 13px; font-weight: 600; color: #28a745;">52</div>
+                        
+                        <div style="position: absolute; top: 88px; left: 500px; width: 3px; height: 24px; background: #007bff; border-radius: 1px;"></div>
+                        <div style="position: absolute; top: 120px; left: 492px; font-size: 13px; font-weight: 600; color: #007bff;">62</div>
+                        
+                        <div style="position: absolute; top: 88px; left: 680px; width: 3px; height: 24px; background: #dc3545; border-radius: 1px;"></div>
+                        <div style="position: absolute; top: 120px; left: 672px; font-size: 13px; font-weight: 600; color: #dc3545;">92</div>
+                        
+                        <!-- Отрезок P = [12, 62] с улучшенным стилем -->
+                        <div style="position: absolute; top: 60px; left: 200px; width: 300px; height: 12px; background: linear-gradient(135deg, #007bff, #0056b3); border-radius: 6px; box-shadow: 0 2px 4px rgba(0,123,255,0.3);"></div>
+                        <div style="position: absolute; top: 60px; left: 195px; width: 10px; height: 12px; background: #007bff; border-radius: 50% 0 0 50%; box-shadow: -2px 0 4px rgba(0,123,255,0.4);"></div>
+                        <div style="position: absolute; top: 60px; left: 495px; width: 10px; height: 12px; background: #0056b3; border-radius: 0 50% 50% 0; box-shadow: 2px 0 4px rgba(0,123,255,0.4);"></div>
+                        <div style="position: absolute; top: 40px; left: 300px; color: #007bff; font-weight: bold; font-size: 15px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">P = [12, 62]</div>
+                        
+                        <!-- Отрезок Q = [52, 92] с улучшенным стилем -->
+                        <div style="position: absolute; top: 135px; left: 400px; width: 280px; height: 12px; background: linear-gradient(135deg, #dc3545, #c82333); border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.3);"></div>
+                        <div style="position: absolute; top: 135px; left: 395px; width: 10px; height: 12px; background: #dc3545; border-radius: 50% 0 0 50%; box-shadow: -2px 0 4px rgba(220,53,69,0.4);"></div>
+                        <div style="position: absolute; top: 135px; left: 675px; width: 10px; height: 12px; background: #c82333; border-radius: 0 50% 50% 0; box-shadow: 2px 0 4px rgba(220,53,69,0.4);"></div>
+                        <div style="position: absolute; top: 155px; left: 500px; color: #dc3545; font-weight: bold; font-size: 15px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">Q = [52, 92]</div>
+                        
+                        <!-- Оптимальный отрезок A = [12, 52] с выделенным стилем -->
+                        <div style="position: absolute; top: 90px; left: 200px; width: 200px; height: 20px; background: linear-gradient(135deg, #28a745, #20c997, #28a745); border-radius: 10px; box-shadow: 0 3px 6px rgba(40,167,69,0.4); border: 2px solid #ffffff;"></div>
+                        <div style="position: absolute; top: 90px; left: 195px; width: 15px; height: 20px; background: #28a745; border-radius: 50% 0 0 50%; box-shadow: -3px 0 6px rgba(40,167,69,0.5); border: 2px solid #ffffff; border-right: none;"></div>
+                        <div style="position: absolute; top: 90px; left: 395px; width: 15px; height: 20px; background: #20c997; border-radius: 0 50% 50% 0; box-shadow: 3px 0 6px rgba(40,167,69,0.5); border: 2px solid #ffffff; border-left: none;"></div>
+                        <div style="position: absolute; top: 175px; left: 240px; color: #28a745; font-weight: bold; font-size: 16px; text-shadow: 0 1px 3px rgba(0,0,0,0.2);">A = [12, 52] (длина = 40)</div>
+                        
+                        <!-- Пунктирные линии для лучшего понимания -->
+                        <div style="position: absolute; top: 72px; left: 400px; width: 2px; height: 63px; background: repeating-linear-gradient(to bottom, #6c757d 0px, #6c757d 4px, transparent 4px, transparent 8px); opacity: 0.6;"></div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; font-size: 14px;">
+                        <p><strong>Визуальный анализ:</strong></p>
+                        <ul>
+                            <li><span style="color: #007bff;">■</span> <strong>P = [12, 62]</strong> - первый отрезок (синий)</li>
+                            <li><span style="color: #dc3545;">■</span> <strong>Q = [52, 92]</strong> - второй отрезок (красный)</li>
+                            <li><span style="color: #28a745;">■</span> <strong>A = [12, 52]</strong> - оптимальное решение минимальной длины (зеленый)</li>
+                        </ul>
+                        <p><strong>Ключевое наблюдение:</strong> Критический участок P \ Q = [12, 52) должен быть покрыт интервалом A, что дает минимальную длину = 40.</p>
+                    </div>
+                </div>
+                <h4>Решение:</h4>
+                
+                <h5 style="color: #495057; margin-top: 25px;">💡 Способ 1: Использование all() и генератора</h5>
+                <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link><code class="language-python">p = range(12, 62)
+q = range(52, 92)
+min_len = 100
+
+for begin in range(100):
+    for end in range(100):
+        a = range(begin, end)
+        if all(not (not(x in a) and (x in p)) or (x in q) for x in range(100)):
+            min_len = min(min_len, end - begin)
+            
+print(min_len)  # Результат: 40</code></pre>
+                </div>
+                
+                <h5 style="color: #495057; margin-top: 25px;">💡 Способ 2: С вложенными циклами и break/else</h5>
+                <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link"><code class="language-python"># Второй способ - с break/else
+p = range(12, 62)
+q = range(52, 92)
+min_len = 100
+for begin in range(100):
+    for end in range(100):
+        a = range(begin, end)
+        # Проверяем каждое значение x
+        for x in range(100):
+            if not(not(not(x in a) and (x in p)) or (x in q)):
+                break
+        else:
+            # Если break не сработал, значит выражение истинно для всех x
+            min_len = min(min_len, end - begin)
+            
+print(min_len)  # Результат: 40
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="ex3" class="section">
+            <h2><span class="emoji">🔹</span>Тип 3: Координатная плоскость</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Для какого наименьшего целого неотрицательного числа А выражение<br><br>
+                    <strong>(x + 2y < A) ∨ (y > x) ∨ (x > 60)</strong><br><br>
+                    тождественно истинно при любых целых неотрицательных х и y?
+                </p>
+                <div class="success">
+                    <strong>💡 Подсказка:</strong> Дизъюнкция (ИЛИ) истинна, если хотя бы один из операндов истинен.
+                    Ложна только когда все операнды ложны.
+                </div>
+                <h4>Решение:</h4>
+                
+                <h5 style="color: #495057; margin-top: 25px;">💡 Способ 1: С флагом</h5>
+                <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link><code class="language-python">for a in range(400):
+    f = True
+    for x in range(400):
+        for y in range(400):
+            if not ((x + 2 * y < a) or (y > x) or (x > 60)):
+                f = False
+    if f:
+        print(a)  # Результат: 122
+        break</code></pre>
+                </div>
+                
+                <h5 style="color: #495057; margin-top: 25px;">💡 Способ 2: С использованием all()</h5>
+                <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link"><code class="language-python">for a in range(400):
+    if all((x + 2 * y < a) or (y > x) or (x > 60) for x in range(400) for y in range(400)):
+        print(a)  # Результат: 122
+        break</code></pre>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+<script src="../assets/js/prism.js"></script>
+</body>
+</html>

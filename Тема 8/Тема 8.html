@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 8. Комбинаторные коды</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/prism.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1><span class="emoji">🔢</span>Комбинаторные коды</h1>
+        <p>Три типовых задания Темы 8: подсчёт кодов, слово по номеру и номер по слову</p>
+    </header>
+
+    <nav class="nav">
+        <ul>
+            <li><a href="#theory">📝 Теория</a></li>
+            <li><a href="#example1">1️⃣ Подсчёт кодов по условиям</a></li>
+            <li><a href="#example2">2️⃣ Слово по его номеру</a></li>
+            <li><a href="#example3">3️⃣ Номер по слову</a></li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <section id="theory" class="section">
+            <h2><span class="emoji">📝</span>Теория</h2>
+
+            <p>Задания Темы 8 связаны с подсчётом количества кодов (слов), составленных из ограниченного набора букв, а также с определением слова по его порядковому номеру в отсортированном списке и наоборот.</p>
+
+            <div class="success">
+                <strong>💡 Библиотека itertools:</strong> для программного решения используется функция <span class="code">itertools.product(буквы, repeat=n)</span>, которая перебирает все коды длины <span class="code">n</span>, составленные из переданных букв (с повторениями). Полное описание библиотеки — на отдельной странице <a href="../11. Дополнительные библиотеки/Библиотека itertools.html">Библиотека itertools</a>.
+            </div>
+
+            <h3>Количество вариантов при выборе k элементов из n</h3>
+            <p>Если ограничений на порядок и повторения нет, число вариантов определяется по одной из классических комбинаторных формул:</p>
+            <img src="../assets/images/Комбинаторные формулы.drawio.svg" alt="Комбинаторные формулы" style="max-width: 100%; margin: 15px 0;">
+        </section>
+
+        <section id="example1" class="section">
+            <h2><span class="emoji">1️⃣</span>Пример 1. Подсчёт кодов по условиям на буквы</h2>
+
+            <div class="task-card">
+                <h4>Задание</h4>
+                <div class="solution">
+                    <p>Борис составляет 6-буквенные коды из букв <strong>Б, О, Р, И, С</strong>. Буквы <strong>Б</strong> и <strong>Р</strong> нужно обязательно использовать ровно по одному разу, букву <strong>С</strong> можно использовать один раз или не использовать совсем, буквы <strong>О</strong> и <strong>И</strong> можно использовать произвольное количество раз или не использовать совсем. Сколько различных кодов может составить Борис?</p>
+                </div>
+            </div>
+
+            <h3>Способ 1. Устное (комбинаторное) решение</h3>
+            <div class="task-card">
+                <div class="solution">
+                    <p><strong>Шаг 1.</strong> Буквы Б и Р встречаются в коде ровно по одному разу каждая — выбираем для них 2 позиции из 6 (с учётом порядка, т.к. Б и Р — разные буквы): <span class="code">6 · 5 = 30</span> способов.</p>
+                    <p><strong>Шаг 2.</strong> Оставшиеся 4 позиции нужно заполнить буквами <strong>С, О, И</strong>, при этом буква С встречается не более одного раза. Рассмотрим два случая:</p>
+                    <ul>
+                        <li><strong>С не используется</strong> — все 4 оставшиеся позиции заполняются буквами О или И (по 2 варианта на каждую позицию): <span class="code">2⁴ = 16</span> способов.</li>
+                        <li><strong>С используется 1 раз</strong> — выбираем 1 из 4 оставшихся позиций под букву С (<span class="code">4</span> способа), а остальные 3 позиции заполняются буквами О или И: <span class="code">4 · 2³ = 32</span> способа.</li>
+                    </ul>
+                    <p><strong>Шаг 3.</strong> Всего вариантов заполнения оставшихся 4 позиций: <span class="code">16 + 32 = 48</span>.</p>
+                    <p><strong>Шаг 4.</strong> Итоговое количество кодов: <span class="code">30 · 48 = 1440</span>.</p>
+                    <p><strong>Ответ:</strong> <strong>1440</strong>.</p>
+                </div>
+            </div>
+
+            <h3>Способ 2. Программное решение</h3>
+            <div class="task-card">
+                <div class="solution">
+                    <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link><code class="language-python">import itertools
+
+count = 0
+for s in itertools.product('БОРИС', repeat=6):
+    line = ''.join(s)
+    if line.count('Б') == 1 and line.count('Р') == 1 and line.count('С') < 2:
+        count += 1
+print(count)</code></pre>
+                    </div>
+                    <p><strong>Результат:</strong> <span class="code">1440</span> — совпадает с ручным подсчётом.</p>
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Заметка:</strong> если в задании написано, что каждый символ можно использовать <strong>только один раз</strong> (без повторений), вместо <span class="code">itertools.product</span> нужно использовать <span class="code">itertools.permutations</span>.
+            </div>
+        </section>
+
+        <section id="example2" class="section">
+            <h2><span class="emoji">2️⃣</span>Пример 2. Слово по его номеру в списке</h2>
+
+            <div class="task-card">
+                <h4>Задание</h4>
+                <div class="solution">
+                    <p>Все 5-буквенные слова, составленные из букв <strong>Л, Н, Р, Т</strong>, записаны в алфавитном порядке. Вот начало списка:</p>
+                    <ol>
+                        <li>ЛЛЛЛЛ</li>
+                        <li>ЛЛЛЛН</li>
+                        <li>ЛЛЛЛР</li>
+                        <li>ЛЛЛЛТ</li>
+                        <li>ЛЛЛНЛ</li>
+                    </ol>
+                    <p>Запишите слово, которое стоит на <strong>150-м</strong> месте от начала списка.</p>
+                </div>
+            </div>
+
+            <div class="success">
+                <strong>💡 Идея:</strong> список слов длины 5 из 4 букв устроен точно так же, как позиционная система счисления с основанием 4: буквы в порядке следования из условия — это цифры <span class="code">0, 1, 2, 3</span> (Л = 0, Н = 1, Р = 2, Т = 3), а слово — это число, записанное 5 цифрами (с ведущими нулями). Поскольку нумерация слов в списке начинается с <strong>1</strong>, а перевод в систему счисления начинается с <strong>0</strong>, из номера места сначала нужно вычесть 1.
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Важно:</strong> Если бы нужно было бы найти слово на 1-ом месте, то при переводе 1, мы получили бы 1, т.е. ЛЛЛЛН, а на первом месте стоит слово ЛЛЛЛЛ.
+                Поэтому, из-за того, что нумерация слов начинается с 1, нам необходимо отнять 1 от необходимого номера позиции.
+            </div>
+
+            <h3>Способ 1. Устное (ручное) решение</h3>
+            <div class="task-card">
+                <div class="solution">
+                    <p><strong>Шаг 1.</strong> Номер слова в списке — 150, переводим в номер по порядку начиная с 0: <span class="code">150 − 1 = 149</span>.</p>
+                    <p><strong>Шаг 2.</strong> Переводим 149 в четверичную систему счисления (5 разрядов, с ведущими нулями):</p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                            <tr><th>Разряд (степень 4)</th><th>4⁴ = 256</th><th>4³ = 64</th><th>4² = 16</th><th>4¹ = 4</th><th>4⁰ = 1</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr><td>Деление</td><td>149 : 256 = 0, ост. 149</td><td>149 : 64 = 2, ост. 21</td><td>21 : 16 = 1, ост. 5</td><td>5 : 4 = 1, ост. 1</td><td>1 : 1 = 1, ост. 0</td></tr>
+                            <tr><td>Цифра</td><td>0</td><td>2</td><td>1</td><td>1</td><td>1</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p><strong>Шаг 3.</strong> Получили число <span class="code">149₁₀ = 02111₄</span>. Заменяем цифры буквами (0→Л, 1→Н, 2→Р, 3→Т):</p>
+                    <p><span class="code">0</span> → Л, <span class="code">2</span> → Р, <span class="code">1</span> → Н, <span class="code">1</span> → Н, <span class="code">1</span> → Н.</p>
+                    <p><strong>Ответ:</strong> <strong>ЛРННН</strong>.</p>
+                </div>
+            </div>
+
+            <h3>Способ 2. Программное решение</h3>
+            <div class="task-card">
+                <div class="solution">
+                    <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link><code class="language-python">from itertools import product
+
+print(list(product('ЛНРТ', repeat=5))[149])</code></pre>
+                    </div>
+                    <p><strong>Результат:</strong> <span class="code">('Л', 'Р', 'Н', 'Н', 'Н')</span> → слово <strong>ЛРННН</strong>, совпадает с ручным подсчётом.</p>
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Важно:</strong> порядок букв для перевода (какая буква — цифра 0, какая — 1 и т.д.) берётся из примера списка слов в условии, а не из формулировки задания — там буквы могут перечисляться в другом порядке.
+            </div>
+        </section>
+
+        <section id="example3" class="section">
+            <h2><span class="emoji">3️⃣</span>Пример 3. Номер слова в списке (обратная задача)</h2>
+
+            <div class="task-card">
+                <h4>Задание</h4>
+                <div class="solution">
+                    <p>Все 6-буквенные слова, составленные из букв <strong>А, О, У</strong>, записаны в <strong>обратном алфавитном порядке</strong>. Вот начало списка:</p>
+                    <ol>
+                        <li>УУУУУУ</li>
+                        <li>УУУУУО</li>
+                        <li>УУУУУА</li>
+                        <li>УУУУОУ</li>
+                    </ol>
+                    <p>На каком месте от начала списка находится слово <strong>ОУУУОО</strong>?</p>
+                </div>
+            </div>
+
+            <h3>Способ 1. Устное (ручное) решение</h3>
+            <div class="task-card">
+                <div class="solution">
+                    <p><strong>Шаг 1.</strong> Список отсортирован в обратном алфавитном порядке (У, затем О, затем А), значит буквы — это цифры троичной системы счисления в порядке их следования в списке: <span class="code">У = 0, О = 1, А = 2</span>.</p>
+                    <p><strong>Шаг 2.</strong> Заменяем буквы слова <strong>ОУУУОО</strong> на цифры:</p>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                            <tr><th>Буква</th><th>О</th><th>У</th><th>У</th><th>У</th><th>О</th><th>О</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr><td>Цифра (осн. 3)</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p><strong>Шаг 3.</strong> Получили троичное число <span class="code">100011₃</span>. Переводим в десятичную систему:</p>
+                    <p><span class="code">1·3⁵ + 0·3⁴ + 0·3³ + 0·3² + 1·3¹ + 1·3⁰ = 243 + 0 + 0 + 0 + 3 + 1 = 247</span>.</p>
+                    <p><strong>Шаг 4.</strong> Это номер слова по порядку начиная с 0, а нумерация мест в списке начинается с 1, поэтому прибавляем 1: <span class="code">247 + 1 = 248</span>.</p>
+                    <p><strong>Ответ:</strong> <strong>248</strong>.</p>
+                </div>
+            </div>
+
+            <h3>Способ 2. Программное решение</h3>
+            <div class="task-card">
+                <div class="solution">
+                    <div class="pre-code">
+<pre class="line-numbers match-braces" data-download-link><code class="language-python">from itertools import product
+
+count = 1
+for p in product('УОА', repeat=6):
+    if ''.join(p) == 'ОУУУОО':
+        break
+    count += 1
+print(count)</code></pre>
+                    </div>
+                    <p><strong>Результат:</strong> <span class="code">248</span> — совпадает с ручным подсчётом.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <a href="#" id="backToTop" class="back-to-top" title="Вернуться в начало">↑</a>
+</div>
+
+<style>
+    .back-to-top {
+        display: none;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #3498db;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 50px;
+        font-size: 24px;
+        text-decoration: none;
+        cursor: pointer;
+        z-index: 999;
+        transition: all 0.3s ease;
+    }
+
+    .back-to-top.visible {
+        display: block;
+    }
+
+    .back-to-top:hover {
+        background: #2980b9;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    code {
+        font-family: 'Courier New', monospace;
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.95em;
+    }
+
+    .section ul {
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+
+    .section ul li {
+        margin-bottom: 8px;
+        line-height: 1.7;
+    }
+
+    .pre-code {
+        margin: 15px 0;
+    }
+</style>
+
+<script>
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backToTop.classList.add('visible');
+        } else {
+            backToTop.classList.remove('visible');
+        }
+    });
+
+    document.getElementById('backToTop').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    window.addEventListener('scroll', function() {
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav a');
+
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.style.background = '';
+            if (link.getAttribute('href') === '#' + current) {
+                link.style.background = '#3498db';
+            }
+        });
+    });
+</script>
+<script src="../assets/js/prism.js"></script>
+</body>
+</html>

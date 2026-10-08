@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 23. Динамическое программирование</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/prism.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1><span class="emoji">📈</span>Тема 13. Динамическое программирование</h1>
+        <p>Количество программ исполнителя, траектории вычислений</p>
+    </header>
+
+    <nav class="nav">
+        <ul>
+            <li><a href="#intro">📝 Введение</a></li>
+            <li><a href="#ex1">🔹 Тип 1: Без ограничений</a></li>
+            <li><a href="#ex2">🔹 Тип 2: Траектория содержит число</a></li>
+            <li><a href="#ex3">🔹 Тип 3: Траектория не содержит числа</a></li>
+            <li><a href="#ex4">🔹 Тип 4: Ограниченное число команд</a></li>
+            <li><a href="#ex5">🔹 Тип 5: Ограничения на количество команд</a></li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <section id="intro" class="section">
+            <h2><span class="emoji">📝</span>Введение</h2>
+            <p>
+                Задания 23 типа ЕГЭ по информатике проверяют умение решать задачи методом динамического
+                программирования.
+                Обычно дается исполнитель с набором команд, преобразующих число (например, +1, *2).
+                Требуется найти количество программ, преобразующих начальное число в конечное.
+            </p>
+            <p>
+                Основные способы решения:
+            <ul>
+                <li><strong>Рекурсия (с кэшированием или без):</strong> Простая реализация, но может быть медленной для
+                    больших чисел.
+                </li>
+                <li><strong>Динамическое программирование (массив):</strong> Заполнение массива значений, где <code>dp[i]</code>
+                    — количество путей в число <code>i</code>.
+                </li>
+            </ul>
+            В примерах ниже используется рекурсивный подход, так как он наиболее нагляден для этих задач.
+            </p>
+        </section>
+
+        <section id="ex1" class="section">
+            <h2><span class="emoji">🔹</span>Тип 1: Программа без ограничений</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Исполнитель Май4 преобразует число, записанное на экране. У исполнителя три команды:<br>
+                    1. Прибавь 1<br>
+                    2. Прибавь 2<br>
+                    3. Прибавь 4<br>
+                    Сколько есть программ, которые число 21 преобразуют в число 30?
+                </p>
+                <h4>Решение:</h4>
+                <div class="pre-code">
+                <pre class="line-numbers match-braces" data-download-link><code class="language-python"># I тип: Программа без ограничений
+def f(x, y):
+    if x == y:
+        return 1
+    if x > y:
+        return 0
+    return f(x + 1, y) + f(x + 2, y) + f(x + 4, y)
+
+print(f(21, 30))</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="ex2" class="section">
+            <h2><span class="emoji">🔹</span>Тип 2: Траектория содержит число</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Исполнитель преобразует число на экране. Команды:<br>
+                    1. Прибавить 1<br>
+                    2. Умножить на 3<br>
+                    3. Прибавить 2<br>
+                    Сколько существует программ, для которых при исходном числе 3 результатом является число 14 и при
+                    этом траектория вычислений содержит число 9?
+                </p>
+                <div class="success">
+                    <strong>💡 Подсказка:</strong> Если траектория должна проходить через число <code>K</code>, задача
+                    разбивается на два этапа: путь от <code>Start</code> до <code>K</code> и путь от <code>K</code> до
+                    <code>End</code>. Результаты перемножаются.
+                </div>
+                <h4>Решение:</h4>
+                <div class="pre-code">
+                <pre class="line-numbers match-braces" data-download-link><code class="language-python"># II тип: Траектория содержит число
+def f(x, y):
+    if x == y:
+        return 1
+    if x > y:
+        return 0
+    return f(x + 1, y) + f(x * 3, y) + f(x + 2, y)
+
+# Путь: 3 -> 9 -> 14
+print(f(3, 9) * f(9, 14))</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="ex3" class="section">
+            <h2><span class="emoji">🔹</span>Тип 3: Траектория не содержит числа</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Исполнитель преобразует число на экране. Команды:<br>
+                    A. Прибавить 1<br>
+                    B. Умножить на 2<br>
+                    C. Возвести в квадрат<br>
+                    Сколько существует программ, которые преобразуют исходное число 3 в число 25 и при этом траектория
+                    вычислений не содержит числа 14?
+                </p>
+                <div class="warning">
+                    <strong>⚠️ Важно:</strong> Если попадаем в запрещенное число, возвращаем 0 путей.
+                </div>
+                <h4>Решение:</h4>
+                <div class="pre-code">
+                <pre class="line-numbers match-braces" data-download-link><code class="language-python"># III тип: Траектория не содержит числа
+def f(x, y):
+    if x == y:
+        return 1
+    # Добавляем проверку на запрещенное число (14)
+    if x > y or x == 14:
+        return 0
+    return f(x + 1, y) + f(x * 2, y) + f(x ** 2, y)
+
+print(f(3, 25))</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="ex4" class="section">
+            <h2><span class="emoji">🔹</span>Тип 4: Ограниченное число команд</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Исполнитель Троечка преобразует число, записанное на доске. Команды:<br>
+                    1. Вычесть 3<br>
+                    2. Умножить на -3<br>
+                    Сколько различных отрицательных результатов можно получить из исходного числа 333 в ходе исполнения
+                    программы, содержащей ровно 13 команд?
+                </p>
+                <h4>Решение:</h4>
+                <div class="pre-code">
+                <pre class="line-numbers match-braces" data-download-link><code class="language-python">def f(x, step, numbers):
+    if step == 13:
+        if x < 0:
+            numbers.add(x)
+        return
+    f(x - 3, step + 1, numbers)
+    f(x * -3, step + 1, numbers)
+
+nums = set()
+f(333, 0, nums)
+print(len(nums))</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="ex5" class="section">
+            <h2><span class="emoji">🔹</span>Тип 5: Ограничения на количество команд</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Исполнитель преобразует число, записанное на экране. Команды:<br>
+                    1. Умножь на 5<br>
+                    2. Умножь на 3<br>
+                    3. Прибавь 45<br>
+                    Сколько существует различных программ, которые преобразуют исходное число 1 в число 2970, и при этом
+                    траектория вычислений:<br>
+                    - не более 4 команд «умножь на 5»<br>
+                    - не менее 2 команд «умножь на 3»<br>
+                    - ровно 5 команд «прибавь 45»?
+                </p>
+                <h4>Решение:</h4>
+                <div class="pre-code">
+                <pre class="line-numbers match-braces" data-download-link><code class="language-python">def f(x, y, k1, k2, k3):
+    if x > y:
+        return 0
+    if x == y:
+        # Проверяем условия на количество команд в конце пути
+        return k1 <= 4 and k2 >= 2 and k3 == 5
+    
+    # Передаем счетчики команд в рекурсию
+    return f(x * 5, y, k1 + 1, k2, k3) + \
+           f(x * 3, y, k1, k2 + 1, k3) + \
+           f(x + 45, y, k1, k2, k3 + 1)
+
+print(f(1, 2970, 0, 0, 0))</code></pre>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+<script src="../assets/js/prism.js"></script>
+</body>
+</html>

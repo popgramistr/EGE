@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тема 6. Исполнитель «Черепаха»</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/prism.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1><span class="emoji">🐢</span>Тема 6. Исполнитель «Черепаха»</h1>
+        <p>Построение фигур на координатной плоскости и подсчёт целочисленных точек</p>
+    </header>
+
+    <nav class="nav">
+        <ul>
+            <li><a href="#intro">📝 Условие задания</a></li>
+            <li><a href="#python">🐍 Решение на Python</a></li>
+            <li><a href="#functions">📚 Функции библиотеки turtle</a></li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <section id="intro" class="section">
+            <h2><span class="emoji">📝</span>Условие задания</h2>
+            <div class="task-card">
+                <h4>Задача:</h4>
+                <p>
+                    Исполнитель Черепаха действует на плоскости с декартовой системой координат.
+                    В начальный момент Черепаха находится в начале координат, её голова направлена вдоль
+                    положительного направления оси ординат, хвост опущен. При опущенном хвосте Черепаха оставляет
+                    на поле след в виде линии. В каждый конкретный момент известно положение исполнителя и
+                    направление его движения.
+                </p>
+                <p>
+                    У исполнителя существует две команды:<br>
+                    <strong>Вперёд n</strong> (где n — целое число), вызывающая передвижение Черепахи на n единиц в
+                    том направлении, куда указывает её голова;<br>
+                    <strong>Направо m</strong> (где m — целое число), вызывающая изменение направления движения на
+                    m градусов по часовой стрелке.
+                </p>
+                <p>
+                    Запись <code>Повтори k [Команда1 Команда2 … КомандаS]</code> означает, что последовательность
+                    из S команд повторится k раз (где k — целое число).
+                </p>
+                <p>
+                    Черепахе был дан для исполнения следующий алгоритм:<br>
+                    <code>Направо 45 Повтори 7 [Вперёд 5 Направо 45 Вперёд 10 Направо 135]</code>.
+                </p>
+                <p>
+                    Определите, сколько точек с целочисленными координатами будут находиться внутри области,
+                    которая ограничена линией, заданной алгоритмом. Точки на линии учитывать не следует.
+                </p>
+            </div>
+        </section>
+
+        <section id="python" class="section">
+            <h2><span class="emoji">🐍</span>Решение на Python</h2>
+            <div class="success">
+                <strong>💡 Подсказка:</strong> Изначально черепаха находится в точке (0, 0) декартовой системы
+                координат и направлена вправо.
+            </div>
+            <div class="pre-code">
+                <pre class="line-numbers match-braces" data-download-link><code class="language-python">from turtle import *
+# Отключает анимацию черепахи (Рисунок выводится сразу)
+tracer(0)
+# Коэффициент, для увеличения масштаба изображения
+koef = 20
+
+# Алгоритм рисования фигуры
+right(45)
+for i in range(7):
+    forward(5 * koef)
+    right(45)
+    forward(10 * koef)
+    right(135)
+
+# Алгоритм рисования сетки
+up()
+for x in range(-50, 50):
+    for y in range(-50, 50):
+        goto(x * koef, y * koef)
+        dot(3)
+exitonclick()</code></pre>
+            </div>
+        </section>
+
+        <section id="functions" class="section">
+            <h2><span class="emoji">📚</span>Функции библиотеки turtle</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Функция</th>
+                        <th>Описание</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><span class="code">screensize(длина, ширина, цвет_окна)</span></td>
+                        <td>Устанавливает размеры окна для отрисовки. Цвет окна можно задавать как <span class="code">'white'</span>.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">forward(длина)</span></td>
+                        <td>Перемещает черепаху вперёд на определённое расстояние (в пикселях). Аналог функции: <span class="code">fd(длина)</span>.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">backward(длина)</span></td>
+                        <td>Перемещает черепаху назад на определённое расстояние (в пикселях). Аналог функции: <span class="code">bk(длина)</span>.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">right(угол)</span></td>
+                        <td>Поворачивает черепаху вправо на определённый угол (в градусах). Аналог функции: <span class="code">rt(угол)</span>.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">left(угол)</span></td>
+                        <td>Поворачивает черепаху влево на определённый угол (в градусах). Аналог функции: <span class="code">lt(угол)</span>.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">exitonclick()</span></td>
+                        <td>Ожидает клика мышью, после которого завершает выполнение программы.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">hideturtle()</span></td>
+                        <td>Убирает изображение черепахи с экрана.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">goto(x, y)</span></td>
+                        <td>Перемещает черепаху в координаты (x, y).</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">up()</span></td>
+                        <td>Поднимает хвост черепахи. Все перемещения черепахи не отображаются на экране.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">down()</span></td>
+                        <td>Опускает хвост черепахи. Все перемещения черепахи оставляют след на экране.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">dot(размер_точки)</span></td>
+                        <td>Рисует на экране точку заданного размера.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="code">update()</span></td>
+                        <td>Обновляет рисунок после рисования.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+</div>
+<script src="../assets/js/prism.js"></script>
+</body>
+</html>

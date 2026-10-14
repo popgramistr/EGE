@@ -12,7 +12,7 @@ def f(x, y, n24, n27):
     return f(x + 1, y, n24, n27) + f(x * 2, y, n24, n27) + f(x * 3, y, n24, n27)
 print(f(9, 81, 0, 0))
 
-answer = 62
+answer = ...
 
 #
 

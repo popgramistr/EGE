@@ -1,8 +1,17 @@
 # Решение
 
+def f(x, y, a):
+    if x > y:
+        if a:
+            return 0
+    if x == y:
+        return 1
+    if a:
+        return f(x + 3, y, False) + f(x * 2, y, False)
+    else:
+        return f(x - 1, y, True) + f(x + 3, y, False) + f(x * 2, y, False)
 
-
-
+print(f(3, 12, False))
 
 
 

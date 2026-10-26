@@ -5,7 +5,6 @@ for n in range(765432015, 1542613240):
         ans += 1
 print(ans)"""
 
-
 answer = 77718123
 
 #

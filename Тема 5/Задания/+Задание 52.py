@@ -4,15 +4,9 @@ for N in range(1, 100000):
     count_1 = 0
     count_0 = 0
     R = bin(N)[2:]
-    for i in range(len(R)):
-        if i % 2 == 0 and R[i] == '0':
-            count_0 += 1
-        elif i % 2 != 0 and R[i] == '1':
-            count_1 += 1
-    R = abs(count_0 - count_1)
+    R = abs(R[::2].count('0') - R[1::2].count('1'))
     if R == 5:
         print(N)
-
 answer = 1023
 
 #

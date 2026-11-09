@@ -1,4 +1,4 @@
-answer = 9
+answer = 6
 
 #
 

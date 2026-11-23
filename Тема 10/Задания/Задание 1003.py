@@ -1,10 +1,8 @@
 # Решение
+from ipaddress import ip_network
 
-
-
-
-
-
+for mask in range(32, -1, -1):
+    net = ip_network(f'147.222.222.147/{mask}', False)
 
 answer = ...
 
